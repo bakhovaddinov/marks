@@ -1,6 +1,8 @@
 CREDENTIALS_FILE_PATH = 'credentials.txt'
 NOTES_FILE_PATH = 'notes.txt'
-def are_credentials_correct(login, password):
+login = str()
+
+def is_user_regestered(login, password):
     credentials = open(CREDENTIALS_FILE_PATH)
     success = False
     for line in credentials:
@@ -15,15 +17,13 @@ def are_credentials_correct(login, password):
 
 
 def sign_up():
-    global login
     login = read_user_data('login: ', 'Invalid symbols are used: ')
     password = read_user_data('password: ', 'Invalid symbols are used: ')
-
+    
     file = open(CREDENTIALS_FILE_PATH, 'a')
     file.write('{} {}\n'.format(login, password))
     file.close()
-    print('Your credentials are saved.')
-    user_choice_func()
+    return login
 
 
 def read_user_data(input_message, repeat_message, invalid_input=' '):
@@ -34,35 +34,34 @@ def read_user_data(input_message, repeat_message, invalid_input=' '):
 
 
 def sign_in():
-    global login
     login = str(input('Login: '))
     password = str(input("Password: "))
-    if are_credentials_correct(login, password):
-        print('Access granted')
-        user_choice_func()
+    if is_user_regestered(login, password):
+        return login
     else:
-        print('Access denied')
-        input('\nPress enter to exit')
+        return None
 
 
 def main():
-    user_choice = str(input('Sign up[1]/sign in[2]? '))
-    if user_choice == '1':
-        sign_up()
-    elif user_choice == '2':
-        sign_in()
-    else:
-        input('Invalid input')
+    login = None
+    while login == None:
+        user_choice = str(input('Sign up[1]/sign in[2]? '))
+        if user_choice == '1':
+            login = sign_up()
+        elif user_choice == '2':
+            login = sign_in()
+
+    user_choice_func(login)
 
 
-def user_choice_func():
+def user_choice_func(login):
     user_choice_func = str(input('New note[1]/Delete all notes[2]?/All notes[3]/Exit[4] '))
     if user_choice_func == '1':
-        note()
+        note(login)
     elif user_choice_func == '2':
-        delete()
+        delete(login)
     elif user_choice_func == '3':
-        all_notes()
+        all_notes(login)
     elif user_choice_func == '4':
         input('\nPress enter to exit')
     else:
@@ -70,10 +69,11 @@ def user_choice_func():
 
 
 
-def note():
+def note(login):
     file = open(NOTES_FILE_PATH, 'a')
     file.write('\n')
-    file.write(str(input('New note: ')))
+    new_note = str(input('New note: '))
+    file.write(new_note)
     file.write('\nby ')
     file.write(login)
     file.close()
@@ -95,4 +95,5 @@ def all_notes():
     input('\nPress enter to exit')
 
 
-main()
+if __name__ == '__main__':
+    main()
