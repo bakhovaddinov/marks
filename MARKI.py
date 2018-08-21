@@ -1,5 +1,6 @@
 CREDENTIALS_FILE_PATH = 'credentials.txt'
 NOTES_FILE_PATH = 'notes.txt'
+
 def are_credentials_correct(login, password):
     credentials = open(CREDENTIALS_FILE_PATH)
     success = False
